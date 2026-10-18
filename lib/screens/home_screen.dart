@@ -13,6 +13,8 @@ import '../widgets/mapa_alertas.dart';
 
 import '../models/usuario.dart';
 
+import 'perfil_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   final Usuario perfil;
 
@@ -178,57 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProfileTab() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CircleAvatar(
-              radius: 40,
-              backgroundColor: AppColors.primaryGreen,
-              child: Icon(Icons.person, size: 44, color: Colors.white),
-            ),
-            const SizedBox(height: 16),
-
-            Text(
-              widget.perfil.nombre,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-
-            Text(
-              widget.perfil.email,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15, color: AppColors.textMuted),
-            ),
-            const SizedBox(height: 8),
-
-            Text(
-              widget.perfil.esAdmin ? 'Administrador' : 'Usuario',
-              style: const TextStyle(fontSize: 14, color: AppColors.textMuted),
-            ),
-            const SizedBox(height: 24),
-
-            ElevatedButton.icon(
-              onPressed: () async {
-                await AuthService().cerrarSesion();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.errorRed,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-              ),
-              icon: const Icon(Icons.logout),
-              label: const Text('Cerrar sesión'),
-            ),
-          ],
-        ),
-      ),
-    );
+    return PerfilScreen(perfil: widget.perfil);
   }
 }

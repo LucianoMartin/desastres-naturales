@@ -8,8 +8,8 @@ class UsuarioRepository {
   CollectionReference<Map<String, dynamic>> get _usuarios =>
       _firestore.collection('usuarios');
 
-  /// Crea el perfil únicamente si todavía no existe.
-  /// Devuelve el perfil existente o el que acaba de crear.
+  /// Crea el perfil solamente si todavía no existe.
+  /// Si existe, conserva el nombre y la foto personalizados.
   Future<Usuario> asegurarPerfil({
     required String uid,
     required String email,
@@ -23,13 +23,14 @@ class UsuarioRepository {
         return Usuario.fromFirestore(documento.id, documento.data()!);
       }
 
-      final nombre = email.trim().split('@').first;
+      final nombreInicial = email.trim().split('@').first;
 
       final datos = <String, dynamic>{
-        'nombre': nombre.isEmpty ? 'usuario' : nombre,
+        'nombre': nombreInicial.isEmpty ? 'usuario' : nombreInicial,
         'email': email.trim(),
         'rol': 'usuario',
         'activo': true,
+        'avatarUrl': '',
         'fechaRegistro': FieldValue.serverTimestamp(),
       };
 
@@ -49,7 +50,30 @@ class UsuarioRepository {
     return Usuario.fromFirestore(documento.id, documento.data()!);
   }
 
-  /// Conserva este método si ya lo utilizás en otras partes.
+  /// Escucha cambios del perfil en tiempo real.
+  Stream<Usuario?> observarUsuario(String uid) {
+    return _usuarios.doc(uid).snapshots().map((documento) {
+      if (!documento.exists || documento.data() == null) {
+        return null;
+      }
+
+      return Usuario.fromFirestore(documento.id, documento.data()!);
+    });
+  }
+
+  Future<void> actualizarNombre(String uid, String nombre) async {
+    await _usuarios.doc(uid).update({'nombre': nombre.trim()});
+  }
+
+  Future<void> actualizarAvatar(String uid, String avatarUrl) async {
+    await _usuarios.doc(uid).update({'avatarUrl': avatarUrl});
+  }
+
+  Future<void> eliminarAvatar(String uid) async {
+    await _usuarios.doc(uid).update({'avatarUrl': ''});
+  }
+
+  /// Conservamos este método por compatibilidad.
   Future<void> crearUsuario({
     required String uid,
     required String nombre,
@@ -65,6 +89,7 @@ class UsuarioRepository {
       'email': email,
       'rol': 'usuario',
       'activo': true,
+      'avatarUrl': '',
       'fechaRegistro': FieldValue.serverTimestamp(),
     });
   }
