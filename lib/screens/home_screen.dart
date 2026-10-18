@@ -11,8 +11,12 @@ import '../widgets/banner_alertas.dart';
 import '../widgets/controles_mapa.dart';
 import '../widgets/mapa_alertas.dart';
 
+import '../models/usuario.dart';
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Usuario perfil;
+
+  const HomeScreen({super.key, required this.perfil});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -186,11 +190,27 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Icon(Icons.person, size: 44, color: Colors.white),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Perfil de Usuario',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+
+            Text(
+              widget.perfil.nombre,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+
+            Text(
+              widget.perfil.email,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 15, color: AppColors.textMuted),
+            ),
+            const SizedBox(height: 8),
+
+            Text(
+              widget.perfil.esAdmin ? 'Administrador' : 'Usuario',
+              style: const TextStyle(fontSize: 14, color: AppColors.textMuted),
             ),
             const SizedBox(height: 24),
+
             ElevatedButton.icon(
               onPressed: () async {
                 await AuthService().cerrarSesion();
