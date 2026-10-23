@@ -1,19 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:desastres_naturales/screens/alertas_screen.dart';
 import 'package:desastres_naturales/screens/historial_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../models/alerta.dart';
+import '../models/usuario.dart';
 import '../services/alerta_service.dart';
 import '../services/location_service.dart';
 import '../theme/app_colors.dart';
 import '../widgets/banner_alertas.dart';
 import '../widgets/controles_mapa.dart';
 import '../widgets/mapa_alertas.dart';
-
-import '../models/usuario.dart';
-
 import 'perfil_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,11 +33,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final AlertaService _alertaService = AlertaService();
   final LocationService _locationService = LocationService();
 
+  late final Stream<List<Alerta>> _alertasStream;
+  late final Stream<QuerySnapshot<Map<String, dynamic>>> _usuariosStream;
+
   LatLng? _miUbicacion;
 
   @override
   void initState() {
     super.initState();
+    _alertasStream = _alertaService.obtenerAlertas();
+    _usuariosStream = FirebaseFirestore.instance
+        .collection('usuarios')
+        .snapshots();
     _obtenerUbicacionInicial();
   }
 
@@ -45,7 +52,19 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final LatLng? ubicacion = await _locationService.obtenerUbicacionActual();
 
-      if (!mounted || ubicacion == null) {
+      if (ubicacion == null) {
+        return;
+      }
+
+      await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(widget.perfil.uid)
+          .update({
+            'latitud': ubicacion.latitude,
+            'longitud': ubicacion.longitude,
+          });
+
+      if (!mounted) {
         return;
       }
 
@@ -84,6 +103,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
         return;
       }
+
+      await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(widget.perfil.uid)
+          .update({
+            'latitud': posicionReal.latitude,
+            'longitud': posicionReal.longitude,
+          });
 
       if (mounted) {
         setState(() {
@@ -128,8 +155,8 @@ class _HomeScreenState extends State<HomeScreen> {
         iconSize: 26,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.map), 
-            label: 'Mapa'
+            icon: Icon(Icons.map),
+            label: 'Mapa',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
@@ -140,8 +167,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Historial',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person), 
-            label: 'Perfil'
+            icon: Icon(Icons.person),
+            label: 'Perfil',
           ),
         ],
       ),
@@ -149,23 +176,56 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMapTab() {
+    final String uidActual =
+        FirebaseAuth.instance.currentUser?.uid ?? widget.perfil.uid;
+
     return StreamBuilder<List<Alerta>>(
-      stream: _alertaService.obtenerAlertas(),
-      builder: (context, snapshot) {
-        final List<Alerta> alertas = snapshot.data ?? [];
+      stream: _alertasStream,
+      builder: (context, alertasSnapshot) {
+        final List<Alerta> alertas = alertasSnapshot.data ?? [];
 
-        return Stack(
-          children: [
-            MapaAlertas(
-              mapController: _mapController,
-              alertas: alertas,
-              miUbicacion: _miUbicacion,
-            ),
+        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: _usuariosStream,
+          builder: (context, usuariosSnapshot) {
+            final List<Usuario> otrosUsuarios = [];
+            Usuario perfilActual = widget.perfil;
 
-            BannerAlertas(alertas: alertas),
+            if (usuariosSnapshot.hasData) {
+              for (final doc in usuariosSnapshot.data!.docs) {
+                final data = doc.data();
 
-            ControlesMapa(onCentrarUbicacion: _centrarMapa),
-          ],
+                if (doc.id == uidActual || doc.id == widget.perfil.uid) {
+                  perfilActual = Usuario.fromFirestore(doc.id, data);
+                  continue;
+                }
+
+                if (data['latitud'] == null || data['longitud'] == null) {
+                  continue;
+                }
+
+                final usuario = Usuario.fromFirestore(doc.id, data);
+                if (usuario.tieneUbicacionValida) {
+                  otrosUsuarios.add(usuario);
+                }
+              }
+            }
+
+            return Stack(
+              children: [
+                MapaAlertas(
+                  mapController: _mapController,
+                  alertas: alertas,
+                  miUbicacion: _miUbicacion,
+                  perfil: perfilActual,
+                  otrosUsuarios: otrosUsuarios,
+                ),
+
+                BannerAlertas(alertas: alertas),
+
+                ControlesMapa(onCentrarUbicacion: _centrarMapa),
+              ],
+            );
+          },
         );
       },
     );
@@ -183,3 +243,4 @@ class _HomeScreenState extends State<HomeScreen> {
     return PerfilScreen(perfil: widget.perfil);
   }
 }
+

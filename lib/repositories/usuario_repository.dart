@@ -73,6 +73,25 @@ class UsuarioRepository {
     await _usuarios.doc(uid).update({'avatarUrl': ''});
   }
 
+  Future<void> actualizarUbicacion(
+    String uid,
+    double latitud,
+    double longitud,
+  ) async {
+    await _usuarios.doc(uid).update({
+      'latitud': latitud,
+      'longitud': longitud,
+    });
+  }
+
+  Stream<List<Usuario>> observarUsuarios() {
+    return _usuarios.snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Usuario.fromFirestore(doc.id, doc.data()))
+          .toList();
+    });
+  }
+
   /// Conservamos este método por compatibilidad.
   Future<void> crearUsuario({
     required String uid,
