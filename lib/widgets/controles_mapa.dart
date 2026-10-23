@@ -25,7 +25,7 @@ class ControlesMapa extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.fondoNormal.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(30),
               boxShadow: const [
                 BoxShadow(
@@ -49,11 +49,11 @@ class ControlesMapa extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   child: CircleAvatar(
                     radius: 16,
-                    backgroundColor: Colors.grey.shade200,
+                    backgroundColor: AppColors.fondoClaro,
                     child: const Icon(
                       Icons.add,
                       size: 18,
-                      color: AppColors.textDark,
+                      color: AppColors.textoClaro,
                     ),
                   ),
                 ),
@@ -65,9 +65,11 @@ class ControlesMapa extends StatelessWidget {
           right: 16,
           bottom: 16,
           child: FloatingActionButton(
+            
             onPressed: onCentrarUbicacion,
-            backgroundColor: AppColors.darkBackground,
-            foregroundColor: Colors.white,
+            backgroundColor: AppColors.fondoNormal.withValues(alpha: 0.3),
+            hoverColor: AppColors.fondoNormal.withValues(alpha: 0.4),
+            foregroundColor: AppColors.textoClaro,
             tooltip: 'Centrar ubicación',
             child: const Icon(Icons.my_location),
           ),

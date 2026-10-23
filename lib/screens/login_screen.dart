@@ -1,3 +1,7 @@
+import 'package:desastres_naturales/widgets/botones/boton_azul.dart';
+import 'package:desastres_naturales/widgets/botones/boton_verde.dart';
+import 'package:desastres_naturales/widgets/botones/campo_formulario.dart';
+import 'package:desastres_naturales/widgets/logo_alertapp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,29 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-  }
-
-  InputDecoration decoracionCampo({
-    required String etiqueta,
-    required IconData icono,
-    Widget? sufijo,
-  }) {
-    return InputDecoration(
-      labelText: etiqueta,
-      prefixIcon: Icon(icono, color: AppColors.primaryGreen),
-      suffixIcon: sufijo,
-      filled: true,
-      fillColor: AppColors.surface,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: AppColors.inputBorder),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: AppColors.primaryGreen, width: 2),
-      ),
-    );
   }
 
   Future<void> autenticar({required bool registrar}) async {
@@ -118,9 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.primaryGreen,
-              AppColors.lightGreen,
-              AppColors.background,
+              AppColors.fondoRojo,
+              AppColors.fondoNormal,
+              AppColors.fondoOscuro,
             ],
           ),
         ),
@@ -132,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 constraints: const BoxConstraints(maxWidth: 440),
                 child: Card(
                   elevation: 10,
-                  color: AppColors.background,
+                  color: AppColors.fondoNormal,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),
@@ -145,23 +126,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 76,
                           height: 76,
                           decoration: BoxDecoration(
-                            color: AppColors.paleGreen,
+                            color: AppColors.fondoClaro,
                             borderRadius: BorderRadius.circular(22),
                           ),
-                          child: const Icon(
-                            Icons.public,
-                            size: 46,
-                            color: AppColors.primaryGreen,
-                          ),
+                          child: const LogoAlertApp(size: 100),
                         ),
                         const SizedBox(height: 18),
                         const Text(
-                          'Desastres Naturales',
+                          'AlertApp',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.darkGreen,
+                            color: AppColors.textoRojo,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -170,105 +147,62 @@ class _LoginScreenState extends State<LoginScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15,
-                            color: AppColors.textMuted,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textoOscuro,
                           ),
                         ),
-                        const SizedBox(height: 28),
-                        TextField(
+                        const SizedBox(height: 24),
+
+                        CampoFormulario(
                           controller: emailController,
-                          keyboardType: TextInputType.emailAddress,
+                          etiqueta: 'Correo electrónico',
+                          icono: Icons.email_outlined,
+                          teclado: TextInputType.emailAddress,
                           autocorrect: false,
-                          decoration: decoracionCampo(
-                            etiqueta: 'Correo electrónico',
-                            icono: Icons.email_outlined,
-                          ),
                         ),
-                        const SizedBox(height: 16),
-                        TextField(
+
+                        const SizedBox(height: 12),
+
+                        CampoFormulario(
                           controller: passwordController,
-                          obscureText: ocultarPassword,
+                          etiqueta: 'Contraseña',
+                          icono: Icons.lock_outline,
+                          autocorrect: false,
+                          mostrarBotonVisibilidad: true,
                           onSubmitted: (_) => autenticar(registrar: false),
-                          decoration: decoracionCampo(
-                            etiqueta: 'Contraseña',
-                            icono: Icons.lock_outline,
-                            sufijo: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  ocultarPassword = !ocultarPassword;
-                                });
-                              },
-                              icon: Icon(
-                                ocultarPassword
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                                color: AppColors.textMuted,
-                              ),
-                            ),
-                          ),
                         ),
+
+                        const SizedBox(height: 6),
+
                         if (error != null) ...[
-                          const SizedBox(height: 16),
                           Text(
                             error!,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                              color: AppColors.errorRed,
+                              color: AppColors.textoRojo,
                               fontSize: 14,
                             ),
                           ),
-                        ],
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: cargando
-                                ? null
-                                : () => autenticar(registrar: false),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryGreen,
-                              foregroundColor: AppColors.textPrimary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            child: cargando
-                                ? const SizedBox(
-                                    width: 22,
-                                    height: 22,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  )
-                                : const Text(
-                                    'Iniciar sesión',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                          ),
+                          const SizedBox(height: 6),
+                        ] else
+                          const SizedBox(height: 26),
+
+                        BotonVerde(
+                          texto: 'Iniciar sesión',
+                          icono: Icons.login,
+                          onPressed: cargando
+                              ? null
+                              : () => autenticar(registrar: false),
                         ),
+
                         const SizedBox(height: 12),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: OutlinedButton(
-                            onPressed: cargando
-                                ? null
-                                : () => autenticar(registrar: true),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.primaryGreen,
-                              side: const BorderSide(
-                                color: AppColors.primaryGreen,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            child: const Text(
-                              'Crear cuenta',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
+
+                        BotonAzul(
+                          texto: 'Crear cuenta',
+                          icono: Icons.person_add,
+                          onPressed: cargando
+                              ? null
+                              : () => autenticar(registrar: true),
                         ),
                       ],
                     ),

@@ -67,10 +67,10 @@ class _DesastresNaturalesAppState extends State<DesastresNaturalesApp>
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Desastres Naturales',
+      title: 'AlertApp',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF00796B)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFED3424)),
         useMaterial3: true,
       ),
       home: const AuthGate(),

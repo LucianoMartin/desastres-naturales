@@ -2,28 +2,41 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Colores principales
-  static const primaryGreen = Color(0xFF00796B);
-  static const darkGreen = Color(0xFF174D48);
-  static const lightGreen = Color(0xFFB2DFDB);
-  static const paleGreen = Color(0xFFE0F2F1);
+  static const colorApp = Color(0xFFED3424);
+  static const rojoPrimario = Color(0xFFD76755);
+  static const rojoSecundario = Color(0xFF7B271A);
 
   // Fondos y superficies
-  static const background = Colors.white;
-  static const surface = Color(0xFFF8FAFA);
-  static const inputBorder = Color(0xFFB0C9C6);
+  static const fondoClaro = Color(0xFF333833);
+  static const fondoNormal = Color(0xFF151915);
+  static const fondoOscuro = Color(0xFF080A08);
+  static const fondoRojo = Color(0xFF110705);
 
-  // Textos
-  static const textPrimary = Colors.white;
-  static const textDark = Color(0xFF263238);
-  static const textMuted = Color(0xFF607D79);
+  // Texto normal
+  static const textoClaro = Color(0xFFBABBBA);
+  static const textoOscuro = Color(0xFF606460);
 
-  // Estados
-  static const successGreen = Color(0xFF4CAF50);
-  static const warningOrange = Color(0xFFFF9800);
-  static const errorRed = Color(0xFFE53935);
+  // Para cosas grises (normales)
+  static const contenedorGris = Color(0xFF606460);
+  static const textoMasClaro = Color(0xFFD0D1D0);
 
-  // Colores oscuros para futuras pantallas
-  static const darkBackground = Color(0xFF121212);
-  static const darkSurface = Color(0xFF1E1E2F);
-  static const darkCard = Color(0xFF25253A);
+  // Para cosas azules
+  static const contenedorAzul = Color(0xFF265C81);
+  static const textoAzul = Color(0xFF3F99D7);
+
+  // Para cosas verdes
+  static const contenedorVerde = Color(0xFF66852F);
+  static const textoVerde = Color(0xFFD7EDB1);
+
+  // Para cosas rojas
+  static const contenedorRojo = Color(0xFF7B271A);
+  static const textoRojo = Color(0xFFD76755);
+
+  // Para cosas naranjas
+  static const contenedorNaranja = Color(0xFF934D1F);
+  static const textoNaranja = Color(0xFFFF8630);
+
+  // Para cosas amarillas
+  static const contenedorAmarillo = Color(0xFFD4A800);
+  static const textoAmarillo = Color(0xFFFFF589);
 }

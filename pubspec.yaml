@@ -39,6 +39,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  assets:
+    - assets/AlertApp-Icon.png
+    - assets/AlertApp-Icon-Transparent.png
+
 # Configuración de los iconos de la aplicación
 flutter_launcher_icons:
   android: "ic_launcher"

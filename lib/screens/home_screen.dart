@@ -4,7 +4,6 @@ import 'package:latlong2/latlong.dart';
 
 import '../models/alerta.dart';
 import '../services/alerta_service.dart';
-import '../services/auth_service.dart';
 import '../services/location_service.dart';
 import '../theme/app_colors.dart';
 import '../widgets/banner_alertas.dart';
@@ -119,9 +118,12 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.darkBackground,
-        selectedItemColor: AppColors.lightGreen,
-        unselectedItemColor: Colors.white60,
+        backgroundColor: AppColors.fondoNormal,
+        selectedItemColor: AppColors.contenedorRojo,
+        unselectedItemColor: AppColors.textoOscuro,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        iconSize: 26,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
           BottomNavigationBarItem(

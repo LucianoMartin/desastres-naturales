@@ -1,3 +1,9 @@
+import 'package:desastres_naturales/theme/app_colors.dart';
+import 'package:desastres_naturales/widgets/botones/boton.dart';
+import 'package:desastres_naturales/widgets/botones/boton_azul.dart';
+import 'package:desastres_naturales/widgets/botones/boton_rojo.dart';
+import 'package:desastres_naturales/widgets/botones/boton_verde.dart';
+import 'package:desastres_naturales/widgets/botones/campo_formulario.dart';
 import 'package:flutter/material.dart';
 
 import '../models/usuario.dart';
@@ -21,13 +27,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
   bool _editandoNombre = false;
   bool _ocupado = false;
-
-  static const Color _fondo = Color(0xFF101A19);
-  static const Color _tarjeta = Color(0xFF1A2925);
-  static const Color _verde = Color(0xFF58D6A0);
-  static const Color _verdeOscuro = Color(0xFF244A3B);
-  static const Color _textoSecundario = Color(0xFF9CB1A7);
-  static const Color _borde = Color(0xFF30443B);
 
   @override
   void initState() {
@@ -108,27 +107,31 @@ class _PerfilScreenState extends State<PerfilScreen> {
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: _tarjeta,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+        backgroundColor: AppColors.fondoNormal,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         icon: const Icon(
           Icons.delete_outline_rounded,
-          color: Color(0xFFFF9B91),
+          color: AppColors.textoRojo,
           size: 32,
         ),
-        title: const Text('Quitar foto'),
-        content: const Text('¿Querés eliminar tu foto de perfil?'),
+        title: const Text('Quitar foto', 
+          style: TextStyle(color:AppColors.textoClaro),
+          textAlign: TextAlign.center,
+        ),
+        content: const Text('¿Querés eliminar tu foto de perfil?', 
+          style: TextStyle(color:AppColors.textoClaro),
+          textAlign: TextAlign.center,
+        ),
         actions: [
-          TextButton(
+          Boton(
+            texto: 'Cancelar',
+            ancho: 120,
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Cancelar'),
           ),
-          FilledButton(
+          BotonRojo(
+            texto: 'Quitar',
+            ancho: 120,
             onPressed: () => Navigator.pop(dialogContext, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFF8B3939),
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Quitar foto'),
           ),
         ],
       ),
@@ -155,10 +158,10 @@ class _PerfilScreenState extends State<PerfilScreen> {
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: _verde, width: 2.5),
+        border: Border.all(color: AppColors.contenedorRojo, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: _verde.withValues(alpha: 0.13),
+            color: AppColors.rojoPrimario.withValues(alpha: 0.13),
             blurRadius: 24,
             spreadRadius: 2,
           ),
@@ -180,12 +183,12 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
   Widget _avatarPredeterminado() {
     return Container(
-      color: _verdeOscuro,
+      color: AppColors.fondoClaro,
       alignment: Alignment.center,
       child: const Icon(
         Icons.person_rounded,
         size: 64,
-        color: Color(0xFFA6F0C9),
+        color: AppColors.contenedorGris,
       ),
     );
   }
@@ -196,9 +199,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
       decoration: BoxDecoration(
-        color: _verdeOscuro,
+        color: AppColors.contenedorAmarillo,
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: _verde.withValues(alpha: 0.22)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -207,15 +209,15 @@ class _PerfilScreenState extends State<PerfilScreen> {
             esAdmin
                 ? Icons.admin_panel_settings_rounded
                 : Icons.verified_user_rounded,
-            color: _verde,
-            size: 16,
+            color: AppColors.textoAmarillo,
+            size: 14,
           ),
           const SizedBox(width: 7),
           Text(
             esAdmin ? 'Administrador' : 'Usuario',
             style: const TextStyle(
-              color: Color(0xFFA6F0C9),
-              fontSize: 12,
+              color: AppColors.textoAmarillo,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -229,14 +231,14 @@ class _PerfilScreenState extends State<PerfilScreen> {
       padding: const EdgeInsets.only(bottom: 14),
       child: Row(
         children: [
-          Icon(icono, color: _verde, size: 21),
+          Icon(icono, color: AppColors.rojoPrimario, size: 21),
           const SizedBox(width: 10),
           Text(
             titulo,
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.textoMasClaro,
               fontSize: 16,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -261,10 +263,10 @@ class _PerfilScreenState extends State<PerfilScreen> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: _verdeOscuro,
+                  color: AppColors.fondoClaro,
                   borderRadius: BorderRadius.circular(13),
                 ),
-                child: Icon(icono, color: _verde, size: 21),
+                child: Icon(icono, color: AppColors.textoRojo, size: 21),
               ),
               const SizedBox(width: 13),
               Expanded(
@@ -274,7 +276,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                     Text(
                       titulo,
                       style: const TextStyle(
-                        color: _textoSecundario,
+                        color: AppColors.textoClaro,
                         fontSize: 12,
                       ),
                     ),
@@ -282,7 +284,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                     Text(
                       valor.isEmpty ? 'Sin información' : valor,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.textoMasClaro,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -294,54 +296,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
             ],
           ),
         ),
-        if (mostrarDivisor) const Divider(height: 1, color: _borde),
+        if (mostrarDivisor) const Divider(height: 1, color: AppColors.fondoClaro),
       ],
-    );
-  }
-
-  Widget _construirBotonPrincipal({
-    required IconData icono,
-    required String texto,
-    required VoidCallback? onPressed,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      height: 52,
-      child: FilledButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icono, size: 20),
-        label: Text(texto, style: const TextStyle(fontWeight: FontWeight.w600)),
-        style: FilledButton.styleFrom(
-          backgroundColor: _verde,
-          foregroundColor: const Color(0xFF10231A),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _construirBotonSecundario({
-    required IconData icono,
-    required String texto,
-    required VoidCallback? onPressed,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: OutlinedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icono, size: 19),
-        label: Text(texto),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: _verde,
-          side: const BorderSide(color: _borde),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-      ),
     );
   }
 
@@ -360,240 +316,235 @@ class _PerfilScreenState extends State<PerfilScreen> {
         }
 
         return Scaffold(
-          backgroundColor: _fondo,
+          backgroundColor: AppColors.fondoOscuro,
           appBar: AppBar(
-            backgroundColor: _fondo,
-            surfaceTintColor: Colors.transparent,
+            backgroundColor: AppColors.fondoClaro,
+            surfaceTintColor: AppColors.colorApp,
             elevation: 0,
             centerTitle: true,
             title: const Text(
               'Mi perfil',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
+              style: TextStyle(
+                color: AppColors.textoMasClaro,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           body: SafeArea(
-            child: Stack(
-              children: [
-                AbsorbPointer(
-                  absorbing: _ocupado,
-                  child: ListView(
-                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 30),
-                    children: [
-                      // Tarjeta principal del perfil
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.fromLTRB(20, 26, 20, 22),
-                        decoration: BoxDecoration(
-                          color: _tarjeta,
-                          borderRadius: BorderRadius.circular(26),
-                          border: Border.all(color: _borde),
-                        ),
-                        child: Column(
-                          children: [
-                            _construirAvatar(perfilActual),
-                            const SizedBox(height: 18),
-                            Text(
-                              perfilActual.nombre.isEmpty
-                                  ? 'Mi cuenta'
-                                  : perfilActual.nombre,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 23,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -0.4,
-                              ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Stack(
+                  children: [
+                    AbsorbPointer(
+                      absorbing: _ocupado,
+                      child: ListView(
+                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 30),
+                        children: [
+                          // Tarjeta principal del perfil
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.fromLTRB(20, 26, 20, 22),
+                            decoration: BoxDecoration(
+                              color: AppColors.fondoNormal,
+                              borderRadius: BorderRadius.circular(26),
                             ),
-                            const SizedBox(height: 7),
-                            Text(
-                              perfilActual.email,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: _textoSecundario,
-                                fontSize: 13,
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            _construirEtiquetaRol(perfilActual),
-                            const SizedBox(height: 22),
-                            _construirBotonPrincipal(
-                              icono: Icons.add_a_photo_outlined,
-                              texto: 'Cambiar foto de perfil',
-                              onPressed: () => _cambiarFoto(perfilActual),
-                            ),
-                            if (perfilActual.avatarUrl.isNotEmpty) ...[
-                              const SizedBox(height: 10),
-                              _construirBotonSecundario(
-                                icono: Icons.delete_outline_rounded,
-                                texto: 'Quitar foto',
-                                onPressed: () => _quitarFoto(perfilActual),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 28),
-
-                      _construirSeccionTitulo(
-                        'Información personal',
-                        Icons.person_outline_rounded,
-                      ),
-
-                      // Datos de la cuenta
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: _tarjeta,
-                          borderRadius: BorderRadius.circular(22),
-                          border: Border.all(color: _borde),
-                        ),
-                        child: Column(
-                          children: [
-                            if (_editandoNombre) ...[
-                              const SizedBox(height: 17),
-                              TextField(
-                                controller: _nombreController,
-                                autofocus: true,
-                                maxLength: 50,
-                                textCapitalization: TextCapitalization.words,
-                                style: const TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                  labelText: 'Nombre de usuario',
-                                  labelStyle: const TextStyle(
-                                    color: _textoSecundario,
+                            child: Column(
+                              children: [
+                                _construirAvatar(perfilActual),
+                                const SizedBox(height: 18),
+                                Text(
+                                  perfilActual.nombre.isEmpty
+                                      ? 'Mi cuenta'
+                                      : perfilActual.nombre,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: AppColors.textoMasClaro,
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: -0.4,
                                   ),
-                                  prefixIcon: const Icon(
-                                    Icons.badge_outlined,
-                                    color: _verde,
+                                ),
+                                const SizedBox(height: 7),
+                                Text(
+                                  perfilActual.email,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: AppColors.textoClaro,
+                                    fontSize: 13,
                                   ),
-                                  filled: true,
-                                  fillColor: _fondo,
-                                  counterStyle: const TextStyle(
-                                    color: _textoSecundario,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: const BorderSide(color: _borde),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: const BorderSide(
-                                      color: _verde,
-                                      width: 1.5,
+                                ),
+                                const SizedBox(height: 16),
+                                _construirEtiquetaRol(perfilActual),
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    BotonAzul(
+                                      texto: 'Cambiar foto',
+                                      icono: Icons.add_a_photo_outlined,
+                                      ancho: 170,
+                                      onPressed: () =>
+                                          _cambiarFoto(perfilActual),
                                     ),
+
+                                    if (perfilActual.avatarUrl.isNotEmpty) ...[
+                                      const SizedBox(width: 10),
+                                      Boton(
+                                        texto: 'Quitar foto',
+                                        icono: Icons.delete_outline_rounded,
+                                        ancho: 170,
+                                        onPressed: () =>
+                                            _quitarFoto(perfilActual),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 28),
+
+                          _construirSeccionTitulo(
+                            'Información personal',
+                            Icons.person_outline_rounded,
+                          ),
+
+                          // Datos de la cuenta
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: AppColors.fondoNormal,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Column(
+                              children: [
+                                // Nombre en modo edición
+                                if (_editandoNombre) ...[
+                                  const SizedBox(height: 16),
+                                  CampoFormulario(
+                                    controller: _nombreController,
+                                    etiqueta: 'Nombre de usuario',
+                                    icono: Icons.badge_outlined,
+                                    maxLength: 50,
+                                    autocorrect: false,
                                   ),
+
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    spacing: 0,
+                                    children: [
+                                      BotonVerde(
+                                        texto: 'Guardar',
+                                        icono: Icons.check_rounded,
+                                        ancho: 150,
+                                        onPressed: () =>
+                                            _guardarNombre(perfilActual),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      BotonRojo(
+                                        texto: 'Cancelar',
+                                        icono: Icons.close_rounded,
+                                        ancho: 150,
+                                        onPressed: () {
+                                          setState(() {
+                                            _editandoNombre = false;
+                                            _nombreController.text =
+                                                perfilActual.nombre;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ] else ...[
+                                  // Nombre
+                                  _construirDato(
+                                    icono: Icons.badge_outlined,
+                                    titulo: 'Nombre de usuario',
+                                    valor: perfilActual.nombre,
+                                    mostrarDivisor: false,
+                                  ),
+
+                                  Boton(
+                                    texto: 'Editar nombre',
+                                    icono: Icons.edit_outlined,
+                                    ancho: 180,
+                                    onPressed: () {
+                                      _nombreController.text =
+                                          perfilActual.nombre;
+                                      setState(() => _editandoNombre = true);
+                                    },
+                                  ),
+                                ],
+                                _construirDato(
+                                  icono: Icons.alternate_email_rounded,
+                                  titulo: 'Correo electrónico',
+                                  valor: perfilActual.email,
+                                  mostrarDivisor: true,
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              _construirBotonPrincipal(
-                                icono: Icons.check_rounded,
-                                texto: 'Guardar cambios',
-                                onPressed: () => _guardarNombre(perfilActual),
-                              ),
-                              const SizedBox(height: 8),
-                              _construirBotonSecundario(
-                                icono: Icons.close_rounded,
-                                texto: 'Cancelar',
-                                onPressed: () {
-                                  setState(() {
-                                    _editandoNombre = false;
-                                    _nombreController.text =
-                                        perfilActual.nombre;
-                                  });
-                                },
-                              ),
-                              const SizedBox(height: 14),
-                            ] else ...[
-                              _construirDato(
-                                icono: Icons.badge_outlined,
-                                titulo: 'Nombre de usuario',
-                                valor: perfilActual.nombre,
-                                mostrarDivisor: false,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 15),
-                                child: _construirBotonSecundario(
-                                  icono: Icons.edit_outlined,
-                                  texto: 'Editar nombre',
-                                  onPressed: () {
-                                    _nombreController.text =
-                                        perfilActual.nombre;
-                                    setState(() => _editandoNombre = true);
-                                  },
+                                _construirDato(
+                                  icono: Icons.shield_outlined,
+                                  titulo: 'Tipo de cuenta',
+                                  valor: perfilActual.esAdmin
+                                      ? 'Administrador'
+                                      : 'Usuario',
+                                  mostrarDivisor: false,
                                 ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 30),
+
+                          // Cierre de sesión
+                          Center(
+                            child: BotonRojo(
+                              texto: 'Cerrar sesión',
+                              icono: Icons.logout_rounded,
+                              ancho: 180,
+                              onPressed: () async {
+                                try {
+                                  await AuthService().cerrarSesion();
+                                } catch (e) {
+                                  _mostrarMensaje(
+                                    'No se pudo cerrar sesión: $e',
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+
+                          const SizedBox(height: 18),
+                          const Center(
+                            child: Text(
+                              'AlertApp 2026 - Todos los derechos reservados',
+                              style: TextStyle(
+                                color: AppColors.textoOscuro,
+                                fontSize: 12,
+                                letterSpacing: 0.5,
                               ),
-                            ],
-                            _construirDato(
-                              icono: Icons.alternate_email_rounded,
-                              titulo: 'Correo electrónico',
-                              valor: perfilActual.email,
-                              mostrarDivisor: true,
                             ),
-                            _construirDato(
-                              icono: Icons.shield_outlined,
-                              titulo: 'Tipo de cuenta',
-                              valor: perfilActual.esAdmin
-                                  ? 'Administrador'
-                                  : 'Usuario',
-                              mostrarDivisor: false,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      // Cierre de sesión
-                      OutlinedButton.icon(
-                        onPressed: () async {
-                          try {
-                            await AuthService().cerrarSesion();
-                          } catch (e) {
-                            _mostrarMensaje('No se pudo cerrar sesión: $e');
-                          }
-                        },
-                        icon: const Icon(Icons.logout_rounded),
-                        label: const Text(
-                          'Cerrar sesión',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFFFF9B91),
-                          side: const BorderSide(color: Color(0xFF503332)),
-                          backgroundColor: const Color(0xFF292020),
-                          minimumSize: const Size(double.infinity, 52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
                           ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 18),
-                      const Center(
-                        child: Text(
-                          'Desastres Naturales',
-                          style: TextStyle(
-                            color: _textoSecundario,
-                            fontSize: 12,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                if (_ocupado)
-                  Positioned.fill(
-                    child: Container(
-                      color: Colors.black.withValues(alpha: 0.35),
-                      child: const Center(
-                        child: CircularProgressIndicator(color: _verde),
+                        ],
                       ),
                     ),
-                  ),
-              ],
+
+                    if (_ocupado)
+                      Positioned.fill(
+                        child: Container(
+                          color: Colors.black.withValues(alpha: 0.35),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.textoRojo,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
           ),
         );

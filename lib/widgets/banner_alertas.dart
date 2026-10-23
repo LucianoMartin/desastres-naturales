@@ -48,7 +48,7 @@ class BannerAlertas extends StatelessWidget {
             children: [
               const Icon(
                 Icons.warning_amber_rounded,
-                color: AppColors.warningOrange,
+                color: AppColors.textoNaranja,
                 size: 20,
               ),
               const SizedBox(width: 8),
