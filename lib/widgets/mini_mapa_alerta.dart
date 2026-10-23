@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:desastres_naturales/widgets/marcador_alerta.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
@@ -16,8 +17,27 @@ class MiniMapaAlerta extends StatefulWidget {
   State<MiniMapaAlerta> createState() => _MiniMapaAlertaState();
 }
 
-class _MiniMapaAlertaState extends State<MiniMapaAlerta> {
+class _MiniMapaAlertaState extends State<MiniMapaAlerta>
+    with SingleTickerProviderStateMixin {
   bool _mouseEncima = false;
+
+  late final AnimationController _waveController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _waveController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _waveController.dispose();
+    super.dispose();
+  }
 
   double _calcularZoom() {
     // Si el radio no es válido, usamos un zoom cercano
@@ -76,33 +96,16 @@ class _MiniMapaAlertaState extends State<MiniMapaAlerta> {
                         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.unaj.desastres_naturales',
                   ),
-                  CircleLayer(
-                    circles: [
-                      CircleMarker(
-                        point: widget.alerta.ubicacion,
-                        radius: widget.alerta.radio,
-                        useRadiusInMeter: true,
-                        color: color.withValues(alpha: 0.25),
-                        borderColor: color,
-                        borderStrokeWidth: 2,
-                      ),
-                    ],
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: widget.alerta.ubicacion,
-                        width: 14,
-                        height: 14,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
+                  AnimatedBuilder(
+                    animation: _waveController,
+                    builder: (context, child) {
+                      return CircleLayer(
+                        circles: MarcadorAlerta.construir(
+                          alerta: widget.alerta,
+                          valorAnimacion: _waveController.value,
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ],
               ),
