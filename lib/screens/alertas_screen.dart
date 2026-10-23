@@ -1,5 +1,6 @@
 import 'package:desastres_naturales/widgets/botones/boton_filtro.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../models/alerta.dart';
 import '../services/alerta_service.dart';
@@ -8,7 +9,12 @@ import '../widgets/alerta_expandida.dart';
 import '../widgets/estado_vacio.dart';
 
 class AlertasScreen extends StatefulWidget {
-  const AlertasScreen({super.key});
+  final void Function(LatLng ubicacion, double zoom)? onAbrirMapa;
+
+  const AlertasScreen({
+    super.key,
+    this.onAbrirMapa,
+  });
 
   @override
   State<AlertasScreen> createState() => _AlertasScreenState();
@@ -36,7 +42,7 @@ class _AlertasScreenState extends State<AlertasScreen> {
         elevation: 0,
         title: const Text(
           'Alertas',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
         actions: [
           IconButton(
@@ -115,6 +121,7 @@ class _AlertasScreenState extends State<AlertasScreen> {
                                       return AlertaExpandida(
                                         key: ValueKey(filtradas[index].id),
                                         alerta: filtradas[index],
+                                        onAbrirMapa: widget.onAbrirMapa,
                                       );
                                     },
                                   ),
@@ -158,7 +165,7 @@ class _AlertasScreenState extends State<AlertasScreen> {
                   style: TextStyle(
                     color: AppColors.textoMasClaro,
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: 5),

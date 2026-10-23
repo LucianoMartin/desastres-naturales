@@ -4,6 +4,7 @@ import 'package:desastres_naturales/widgets/botones/boton_azul.dart';
 import 'package:desastres_naturales/widgets/botones/boton_rojo.dart';
 import 'package:desastres_naturales/widgets/botones/boton_verde.dart';
 import 'package:desastres_naturales/widgets/botones/campo_formulario.dart';
+import 'package:desastres_naturales/widgets/dato_elemento.dart';
 import 'package:flutter/material.dart';
 
 import '../models/usuario.dart';
@@ -246,61 +247,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
     );
   }
 
-  Widget _construirDato({
-    required IconData icono,
-    required String titulo,
-    required String valor,
-    bool mostrarDivisor = true,
-  }) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: AppColors.fondoClaro,
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: Icon(icono, color: AppColors.textoRojo, size: 21),
-              ),
-              const SizedBox(width: 13),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      titulo,
-                      style: const TextStyle(
-                        color: AppColors.textoClaro,
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      valor.isEmpty ? 'Sin información' : valor,
-                      style: const TextStyle(
-                        color: AppColors.textoMasClaro,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      softWrap: true,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (mostrarDivisor) const Divider(height: 1, color: AppColors.fondoClaro),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Usuario?>(
@@ -460,10 +406,10 @@ class _PerfilScreenState extends State<PerfilScreen> {
                                   ),
                                 ] else ...[
                                   // Nombre
-                                  _construirDato(
+                                  ElementoDato(
                                     icono: Icons.badge_outlined,
                                     titulo: 'Nombre de usuario',
-                                    valor: perfilActual.nombre,
+                                    contenido: perfilActual.nombre,
                                     mostrarDivisor: false,
                                   ),
 
@@ -478,16 +424,19 @@ class _PerfilScreenState extends State<PerfilScreen> {
                                     },
                                   ),
                                 ],
-                                _construirDato(
-                                  icono: Icons.alternate_email_rounded,
+
+                                // Correo electrónico
+                                ElementoDato(
+                                  icono: Icons.alternate_email_rounded, 
                                   titulo: 'Correo electrónico',
-                                  valor: perfilActual.email,
-                                  mostrarDivisor: true,
+                                  contenido: perfilActual.email,
                                 ),
-                                _construirDato(
+
+                                // Tipo de cuenta
+                                ElementoDato(
                                   icono: Icons.shield_outlined,
                                   titulo: 'Tipo de cuenta',
-                                  valor: perfilActual.esAdmin
+                                  contenido: perfilActual.esAdmin
                                       ? 'Administrador'
                                       : 'Usuario',
                                   mostrarDivisor: false,

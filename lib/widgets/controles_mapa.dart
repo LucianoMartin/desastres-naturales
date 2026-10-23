@@ -25,7 +25,7 @@ class ControlesMapa extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.fondoNormal.withValues(alpha: 0.3),
+              color: AppColors.fondoNormal.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(30),
               boxShadow: const [
                 BoxShadow(
@@ -67,8 +67,8 @@ class ControlesMapa extends StatelessWidget {
           child: FloatingActionButton(
             
             onPressed: onCentrarUbicacion,
-            backgroundColor: AppColors.fondoNormal.withValues(alpha: 0.3),
-            hoverColor: AppColors.fondoNormal.withValues(alpha: 0.4),
+            backgroundColor: AppColors.fondoNormal.withValues(alpha: 0.5),
+            hoverColor: AppColors.fondoNormal.withValues(alpha: 0.5),
             foregroundColor: AppColors.textoClaro,
             tooltip: 'Centrar ubicación',
             child: const Icon(Icons.my_location),

@@ -1,5 +1,6 @@
 import 'package:desastres_naturales/widgets/botones/boton_filtro.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../models/alerta.dart';
 import '../services/alerta_service.dart';
@@ -8,7 +9,12 @@ import '../widgets/alerta_expandida.dart';
 import '../widgets/estado_vacio.dart';
 
 class HistorialScreen extends StatefulWidget {
-  const HistorialScreen({super.key});
+  final void Function(LatLng ubicacion, double zoom)? onAbrirMapa;
+
+  const HistorialScreen({
+    super.key,
+    this.onAbrirMapa,
+  });
 
   @override
   State<HistorialScreen> createState() => _HistorialScreenState();
@@ -117,6 +123,7 @@ class _HistorialScreenState extends State<HistorialScreen> {
                                       return AlertaExpandida(
                                         key: ValueKey(filtradas[index].id),
                                         alerta: filtradas[index],
+                                        onAbrirMapa: widget.onAbrirMapa,
                                       );
                                     },
                                   ),

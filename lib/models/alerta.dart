@@ -40,7 +40,7 @@ class Alerta {
         try {
           return valor.toDate() as DateTime;
         } catch (_) {
-          // Si no es un Timestamp válido, continúa.
+          // Si no es un DateTime válido, sigue igual
         }
       }
 
