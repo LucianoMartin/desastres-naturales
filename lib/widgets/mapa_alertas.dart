@@ -3,17 +3,23 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../models/alerta.dart';
+import '../models/usuario.dart';
+import '../theme/app_colors.dart';
 
 class MapaAlertas extends StatefulWidget {
   final MapController mapController;
   final List<Alerta> alertas;
   final LatLng? miUbicacion;
+  final Usuario perfil;
+  final List<Usuario> otrosUsuarios;
 
   const MapaAlertas({
     super.key,
     required this.mapController,
     required this.alertas,
     required this.miUbicacion,
+    required this.perfil,
+    this.otrosUsuarios = const [],
   });
 
   @override
@@ -44,7 +50,47 @@ class _MapaAlertasState extends State<MapaAlertas>
     super.dispose();
   }
 
-  List<Marker> _crearMarcadores() {
+  Widget _construirAvatarUsuario({
+    required String? avatarUrl,
+    required double radius,
+    required Color borderColor,
+    required double borderWidth,
+    required double iconSize,
+  }) {
+    final String urlLimpia = (avatarUrl ?? '').trim();
+    final bool tieneUrlValida =
+        urlLimpia.isNotEmpty &&
+        urlLimpia != 'null' &&
+        (urlLimpia.startsWith('http://') || urlLimpia.startsWith('https://'));
+
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: borderColor, width: borderWidth),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: tieneUrlValida
+          ? CircleAvatar(
+              radius: radius,
+              backgroundColor: AppColors.fondoClaro,
+              backgroundImage: NetworkImage(urlLimpia),
+              onBackgroundImageError: (_, _) {},
+            )
+          : CircleAvatar(
+              radius: radius,
+              backgroundColor: AppColors.fondoClaro,
+              child: Icon(Icons.person, size: iconSize, color: Colors.white),
+            ),
+    );
+  }
+
+  List<Marker> _crearMarcadoresAlertas() {
     return widget.alertas.map((alerta) {
       return Marker(
         point: alerta.ubicacion,
@@ -77,6 +123,59 @@ class _MapaAlertasState extends State<MapaAlertas>
         ),
       );
     }).toList();
+  }
+
+  List<Marker> _crearMarcadoresUsuarios() {
+    final List<Marker> marcadores = [];
+
+    for (final usuario in widget.otrosUsuarios) {
+      if (usuario.uid == widget.perfil.uid) continue;
+      if (usuario.latitud == null || usuario.longitud == null) continue;
+
+      marcadores.add(
+        Marker(
+          point: LatLng(usuario.latitud!, usuario.longitud!),
+          width: 36,
+          height: 36,
+          child: Center(
+            child: _construirAvatarUsuario(
+              avatarUrl: usuario.avatarUrl,
+              radius: 14,
+              borderColor: Colors.white,
+              borderWidth: 2,
+              iconSize: 16,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final LatLng? ubicacionPropia =
+        widget.miUbicacion ??
+        (widget.perfil.tieneUbicacionValida
+            ? LatLng(widget.perfil.latitud!, widget.perfil.longitud!)
+            : null);
+
+    if (ubicacionPropia != null) {
+      marcadores.add(
+        Marker(
+          point: ubicacionPropia,
+          width: 46,
+          height: 46,
+          child: Center(
+            child: _construirAvatarUsuario(
+              avatarUrl: widget.perfil.avatarUrl,
+              radius: 19,
+              borderColor: AppColors.colorApp,
+              borderWidth: 3,
+              iconSize: 22,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return marcadores;
   }
 
   List<CircleMarker> _crearCirculos(double animValue) {
@@ -151,32 +250,9 @@ class _MapaAlertasState extends State<MapaAlertas>
           },
         ),
 
-        MarkerLayer(markers: _crearMarcadores()),
+        MarkerLayer(markers: _crearMarcadoresAlertas()),
 
-        if (widget.miUbicacion != null)
-          MarkerLayer(
-            markers: [
-              Marker(
-                point: widget.miUbicacion!,
-                width: 24,
-                height: 24,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 3.5),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black38,
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+        MarkerLayer(markers: _crearMarcadoresUsuarios()),
       ],
     );
   }
