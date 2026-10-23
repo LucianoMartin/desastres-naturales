@@ -318,7 +318,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
         return Scaffold(
           backgroundColor: AppColors.fondoOscuro,
           appBar: AppBar(
-            backgroundColor: AppColors.fondoClaro,
+            backgroundColor: AppColors.fondoNormal,
             surfaceTintColor: AppColors.colorApp,
             elevation: 0,
             centerTitle: true,

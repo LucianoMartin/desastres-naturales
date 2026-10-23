@@ -1,3 +1,5 @@
+import 'package:desastres_naturales/screens/alertas_screen.dart';
+import 'package:desastres_naturales/screens/historial_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -125,7 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedFontSize: 12,
         iconSize: 26,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map), 
+            label: 'Mapa'
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Alertas',
@@ -134,7 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.access_time),
             label: 'Historial',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person), 
+            label: 'Perfil'
+          ),
         ],
       ),
     );
@@ -164,21 +172,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAlertsTab() {
-    return const Center(
-      child: Text(
-        'Sección de Alertas',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-      ),
-    );
+    return const AlertasScreen();
   }
 
   Widget _buildHistoryTab() {
-    return const Center(
-      child: Text(
-        'Historial de Eventos',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-      ),
-    );
+    return const HistorialScreen();
   }
 
   Widget _buildProfileTab() {
