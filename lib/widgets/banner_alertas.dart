@@ -162,7 +162,7 @@ class _BannerAlertasState extends State<BannerAlertas>
                     ? const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Sin alertas activas',
+                          'Estás seguro, por ahora',
                           style: TextStyle(
                             color: Colors.white70,
                             fontSize: 14,
