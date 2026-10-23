@@ -2,6 +2,7 @@ import 'package:desastres_naturales/theme/app_colors.dart';
 import 'package:desastres_naturales/widgets/botones/boton.dart';
 import 'package:desastres_naturales/widgets/botones/boton_rojo.dart';
 import 'package:desastres_naturales/widgets/botones/campo_formulario.dart';
+import 'package:desastres_naturales/widgets/elemento_dato.dart';
 import 'package:flutter/material.dart';
 
 import '../models/usuario.dart';

@@ -121,8 +121,8 @@ class ControlesMapa extends StatelessWidget {
           bottom: 16,
           child: FloatingActionButton(
             onPressed: onCentrarUbicacion,
-            backgroundColor: AppColors.fondoNormal.withValues(alpha: 0.3),
-            hoverColor: AppColors.fondoNormal.withValues(alpha: 0.4),
+            backgroundColor: AppColors.fondoNormal.withValues(alpha: 0.5),
+            hoverColor: AppColors.fondoNormal.withValues(alpha: 0.5),
             foregroundColor: AppColors.textoClaro,
             tooltip: 'Centrar ubicación',
             child: const Icon(Icons.my_location),

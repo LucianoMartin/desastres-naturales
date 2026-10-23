@@ -128,6 +128,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _abrirMapaEn(LatLng ubicacion, double zoom) {
+    setState(() {
+      _selectedIndex = 0;
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      _mapController.move(ubicacion, zoom);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> tabs = [
@@ -236,11 +248,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAlertsTab() {
-    return const AlertasScreen();
+    return AlertasScreen(
+      onAbrirMapa: _abrirMapaEn,
+    );
   }
 
   Widget _buildHistoryTab() {
-    return const HistorialScreen();
+    return HistorialScreen(
+      onAbrirMapa: _abrirMapaEn,
+    );
   }
 
   Widget _buildProfileTab() {
