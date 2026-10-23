@@ -53,22 +53,8 @@ class _MiniMapaAlertaState extends State<MiniMapaAlerta>
     return zoom.clamp(3.0, 17.0).toDouble();
   }
 
-  Color _colorAlerta() {
-    switch (widget.alerta.tipo.toLowerCase()) {
-      case 'misil':
-        return AppColors.rojoSecundario;
-      case 'terremoto':
-        return AppColors.textoNaranja;
-      case 'inundación':
-        return AppColors.textoAzul;
-      default:
-        return AppColors.rojoPrimario;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final color = _colorAlerta();
     final zoom = _calcularZoom();
 
     return Material(
