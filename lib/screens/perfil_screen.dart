@@ -258,6 +258,19 @@ class _PerfilScreenState extends State<PerfilScreen> {
                 ? 'Sin correo registrado'
                 : perfil.email,
           ),
+
+          ElementoDato(
+            icono: Icons.calendar_month,
+            titulo: 'Fecha de registro',
+            contenido: perfil.fechaRegistro != null
+                ? 'Registrado el ${perfil.fechaRegistro!.day.toString().padLeft(2, '0')}/'
+                      '${perfil.fechaRegistro!.month.toString().padLeft(2, '0')}/'
+                      '${perfil.fechaRegistro!.year} '
+                      'a las '
+                      '${perfil.fechaRegistro!.hour.toString().padLeft(2, '0')}:'
+                      '${perfil.fechaRegistro!.minute.toString().padLeft(2, '0')} hs'
+                : 'Fecha de registro desconocida',
+          ),
           
           ElementoDato(
             icono: Icons.shield_outlined,
