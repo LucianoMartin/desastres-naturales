@@ -13,11 +13,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'location_service.dart';
 
+/// Debe ser IGUAL a CELL en el Worker.
 const double kCell = 0.25;
 
-const String _kVapidKey = 'BAAvLLOVKrHmkQL3rLHDs5slbdzdNBLV-mq3aD2kzWGN9UGmZSNFbpfVtF0_I6nQaBhNbPHEwqWJJ35pdmltbZA';
+const String _kVapidKey =
+    'BAAvLLOVKrHmkQL3rLHDs5slbdzdNBLV-mq3aD2kzWGN9UGmZSNFbpfVtF0_I6nQaBhNbPHEwqWJJ35pdmltbZA';
 
-const String _kWorkerSubscribe = 'https://urgent-api.sistemalaertasptr.workers.dev/subscribe';
+const String _kWorkerSubscribe =
+    'https://urgent-api.sistemalaertasptr.workers.dev/subscribe';
 
 String temaDeCelda(LatLng p) {
   final i = ((p.latitude + 90) / kCell).floor();
@@ -26,7 +29,8 @@ String temaDeCelda(LatLng p) {
 }
 
 // dart:io no existe en web, así que se usa defaultTargetPlatform con kIsWeb.
-bool get _esAndroid => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+bool get _esAndroid =>
+    !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 bool get _esIOS => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
 class NotificacionService {
@@ -57,11 +61,13 @@ class NotificacionService {
   /// (SnackBar, diálogo, banner...). En móvil también está disponible.
   Stream<RemoteMessage> get mensajes => _mensajes.stream;
 
-  /// Permiso de notificaciones, canal Android y notificaciones con la app abierta.
+  /// Permiso de notificaciones (solo móvil), canal Android y
+  /// notificaciones con la app abierta.
   Future<void> init() async {
-    await _fm.requestPermission(alert: true, badge: true, sound: true);
-
     if (!kIsWeb) {
+      // En web el permiso solo puede pedirse desde un clic: ver pedirPermisoWeb()
+      await _fm.requestPermission(alert: true, badge: true, sound: true);
+
       await _local.initialize(
         settings: const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -103,6 +109,25 @@ class NotificacionService {
     });
   }
 
+  /// Web: ¿el usuario ya concedió el permiso de notificaciones?
+  Future<bool> permisoWebConcedido() async {
+    final s = await _fm.getNotificationSettings();
+    return s.authorizationStatus == AuthorizationStatus.authorized;
+  }
+
+  /// Web: llamar SOLO desde el onPressed de un botón, y que sea lo primero
+  /// que ocurra en el handler (sin ningún await antes).
+  Future<bool> pedirPermisoWeb() async {
+    final s = await _fm.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    final ok = s.authorizationStatus == AuthorizationStatus.authorized;
+    if (ok) await actualizarSuscripcion(force: true);
+    return ok;
+  }
+
   /// Compara la celda actual con la guardada y cambia la suscripción si hace falta.
   /// [force] ignora el límite de una comprobación cada 5 minutos.
   Future<void> actualizarSuscripcion({bool force = false}) async {
@@ -116,9 +141,16 @@ class NotificacionService {
 
     _ocupado = true;
     try {
+      // Web sin permiso: no seguir (getToken intentaría pedirlo y fallaría)
+      if (kIsWeb && !await permisoWebConcedido()) {
+        dev.log('web: falta permiso de notificaciones', name: 'alertas');
+        return;
+      }
+
       final ubicacion = await _location.obtenerUbicacionActual().timeout(
         const Duration(seconds: 15),
       );
+      dev.log('ubicación: $ubicacion', name: 'alertas');
       if (ubicacion == null) return; // sin permiso o servicio apagado
 
       final tema = temaDeCelda(ubicacion);
@@ -128,7 +160,9 @@ class NotificacionService {
       if (kIsWeb) {
         // El token del navegador puede cambiar aunque la celda sea la misma
         final token = await _fm.getToken(vapidKey: _kVapidKey);
-        if (token == null) throw Exception('Sin token FCM (¿permiso denegado?)');
+        if (token == null) {
+          throw Exception('Sin token FCM (¿permiso denegado?)');
+        }
 
         if (anterior == tema && prefs.getString(_prefsTokenKey) == token) {
           _ultimaComprobacion = DateTime.now();
@@ -195,7 +229,11 @@ class NotificacionService {
         'Authorization': 'Bearer $idToken',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({'token': fcmToken, 'topic': tema, 'previous': anterior}),
+      body: jsonEncode({
+        'token': fcmToken,
+        'topic': tema,
+        'previous': anterior,
+      }),
     );
     if (res.statusCode != 200) {
       throw Exception('subscribe ${res.statusCode}: ${res.body}');
@@ -211,3 +249,5 @@ class NotificacionService {
     }
   }
 }
+
+final notificaciones = NotificacionService();
