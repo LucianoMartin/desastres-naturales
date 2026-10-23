@@ -15,6 +15,8 @@ import '../widgets/banner_alertas.dart';
 import '../widgets/controles_mapa.dart';
 import '../widgets/mapa_alertas.dart';
 import 'perfil_screen.dart';
+import '../services/notificacion_service.dart';
+import '../widgets/boton_activar_alertas.dart';
 
 class HomeScreen extends StatefulWidget {
   final Usuario perfil;
@@ -232,6 +234,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   onCentrarUbicacion: _centrarMapa,
                   mapController: _mapController,
                   usuarios: otrosUsuarios,
+                ),
+
+                // Solo aparece en web y mientras no haya permiso de notificaciones
+                Positioned(
+                  left: 16,
+                  bottom: 16,
+                  child: BotonActivarAlertas(servicio: notificaciones),
                 ),
               ],
             );

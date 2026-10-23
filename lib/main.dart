@@ -9,6 +9,8 @@ import 'repositories/auth_repository.dart';
 import 'screens/auth_gate.dart';
 import 'services/notificacion_service.dart';
 
+final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -26,9 +28,9 @@ class DesastresNaturalesApp extends StatefulWidget {
 
 class _DesastresNaturalesAppState extends State<DesastresNaturalesApp>
     with WidgetsBindingObserver {
-  final _notificaciones = NotificacionService();
   final _auth = AuthRepository();
   StreamSubscription<User?>? _sesionSub;
+  StreamSubscription? _mensajesSub;
 
   @override
   void initState() {
@@ -38,14 +40,26 @@ class _DesastresNaturalesAppState extends State<DesastresNaturalesApp>
   }
 
   Future<void> _iniciar() async {
-    await _notificaciones.init();
+    await notificaciones.init();
+
+    // Aviso en la interfaz con la app/pestaña abierta
+    _mensajesSub = notificaciones.mensajes.listen((m) {
+      final n = m.notification;
+      if (n == null) return;
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        SnackBar(
+          content: Text('${n.title ?? 'Alerta'}: ${n.body ?? ''}'),
+          duration: const Duration(seconds: 10),
+        ),
+      );
+    });
 
     // Se dispara al abrir la app (con la sesión guardada) y en cada login/logout
     _sesionSub = _auth.cambiosUsuario.listen((usuario) {
       if (usuario != null) {
-        _notificaciones.actualizarSuscripcion(force: true);
+        notificaciones.actualizarSuscripcion(force: true);
       } else {
-        _notificaciones.cancelarSuscripcion();
+        notificaciones.cancelarSuscripcion();
       }
     });
   }
@@ -53,13 +67,14 @@ class _DesastresNaturalesAppState extends State<DesastresNaturalesApp>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && _auth.usuarioActual != null) {
-      _notificaciones.actualizarSuscripcion(); // máx. una vez cada 5 min
+      notificaciones.actualizarSuscripcion(); // máx. una vez cada 5 min
     }
   }
 
   @override
   void dispose() {
     _sesionSub?.cancel();
+    _mensajesSub?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -69,6 +84,7 @@ class _DesastresNaturalesAppState extends State<DesastresNaturalesApp>
     return MaterialApp(
       title: 'AlertApp',
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: scaffoldMessengerKey,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFED3424)),
         useMaterial3: true,
