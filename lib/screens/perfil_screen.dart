@@ -1,6 +1,7 @@
 import 'package:desastres_naturales/theme/app_colors.dart';
 import 'package:desastres_naturales/widgets/botones/boton.dart';
 import 'package:desastres_naturales/widgets/botones/boton_rojo.dart';
+import 'package:desastres_naturales/widgets/botones/boton_verde.dart';
 import 'package:desastres_naturales/widgets/botones/campo_formulario.dart';
 import 'package:desastres_naturales/widgets/elemento_dato.dart';
 import 'package:flutter/material.dart';
@@ -184,7 +185,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
   Widget _construirIdentidad(Usuario perfil) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
       decoration: BoxDecoration(
         color: AppColors.fondoNormal,
         borderRadius: BorderRadius.circular(16),
@@ -210,21 +211,20 @@ class _PerfilScreenState extends State<PerfilScreen> {
               spacing: 12,
               runSpacing: 8,
               children: [
-                BotonRojo(
-                  texto: 'Guardar',
-                  icono: Icons.check_rounded,
-                  ancho: 130,
-                  onPressed: () => _guardarNombre(perfil),
-                ),
                 Boton(
                   texto: 'Cancelar',
-                  ancho: 130,
+                  ancho: 120,
                   onPressed: () {
                     setState(() {
                       _editandoNombre = false;
                       _nombreController.text = perfil.nombre;
                     });
                   },
+                ),
+                BotonVerde(
+                  texto: 'Guardar',
+                  ancho: 120,
+                  onPressed: () => _guardarNombre(perfil),
                 ),
               ],
             ),
@@ -238,54 +238,34 @@ class _PerfilScreenState extends State<PerfilScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            TextButton.icon(
+            Boton(
+              texto: 'Editar nombre',
+              icono: Icons.edit_outlined,
+              ancho: 180,
               onPressed: () {
                 _nombreController.text = perfil.nombre;
                 setState(() => _editandoNombre = true);
               },
-              style: TextButton.styleFrom(foregroundColor: AppColors.textoRojo),
-              icon: const Icon(Icons.edit_outlined, size: 18),
-              label: const Text('Editar nombre'),
             ),
           ],
           const SizedBox(height: 16),
           const Divider(height: 1, color: AppColors.fondoClaro),
-          const SizedBox(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(
-                Icons.mail_outline,
-                color: AppColors.textoClaro,
-                size: 20,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: SelectableText(
-                  perfil.email.isEmpty ? 'Sin correo registrado' : perfil.email,
-                  style: const TextStyle(color: AppColors.textoClaro),
-                ),
-              ),
-            ],
+
+          ElementoDato(
+            icono: Icons.mail_outline,
+            titulo: 'Correo electrónico',
+            contenido: perfil.email.isEmpty
+                ? 'Sin correo registrado'
+                : perfil.email,
           ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              const Icon(
-                Icons.shield_outlined,
-                color: AppColors.textoClaro,
-                size: 20,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  perfil.esAdmin
-                      ? 'Cuenta de administrador'
-                      : 'Cuenta de usuario',
-                  style: const TextStyle(color: AppColors.textoClaro),
-                ),
-              ),
-            ],
+          
+          ElementoDato(
+            icono: Icons.shield_outlined,
+            titulo: 'Tipo de cuenta',
+            contenido: perfil.esAdmin
+                ? 'Cuenta de administrador'
+                : 'Cuenta de usuario',
+            mostrarDivisor: false,
           ),
         ],
       ),
@@ -387,19 +367,25 @@ class _PerfilScreenState extends State<PerfilScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          BotonRojo(
-                            texto: 'Cerrar sesión',
-                            icono: Icons.logout_rounded,
-                            onPressed: () async {
-                              setState(() => _ocupado = true);
-                              try {
-                                await AuthService().cerrarSesion();
-                              } catch (e) {
-                                _mostrarMensaje('No se pudo cerrar sesión: $e');
-                              } finally {
-                                if (mounted) setState(() => _ocupado = false);
-                              }
-                            },
+
+                          Center(
+                            child: BotonRojo(
+                              texto: 'Cerrar sesión',
+                              icono: Icons.logout_rounded,
+                              ancho: 190,
+                              onPressed: () async {
+                                setState(() => _ocupado = true);
+                                try {
+                                  await AuthService().cerrarSesion();
+                                } catch (e) {
+                                  _mostrarMensaje(
+                                    'No se pudo cerrar sesión: $e',
+                                  );
+                                } finally {
+                                  if (mounted) setState(() => _ocupado = false);
+                                }
+                              },
+                            ),
                           ),
                           const SizedBox(height: 16),
                         ],

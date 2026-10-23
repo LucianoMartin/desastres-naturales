@@ -91,7 +91,7 @@ class _ResumenRiesgoPerfilState extends State<ResumenRiesgoPerfil>
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       decoration: BoxDecoration(
         color: AppColors.fondoNormal,
         borderRadius: BorderRadius.circular(16),

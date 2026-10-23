@@ -16,7 +16,9 @@ class BotonFiltro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChoiceChip(
-      label: Text(tipo),
+      label: Text(
+        tipo.isEmpty ? tipo : '${tipo[0].toUpperCase()}${tipo.substring(1)}',
+      ),
       selected: seleccionado,
       onSelected: onSelected,
       backgroundColor: AppColors.fondoNormal,

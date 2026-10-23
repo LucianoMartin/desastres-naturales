@@ -111,7 +111,7 @@ class AlertaExpandida extends StatelessWidget {
         title: Text(
           alerta.nombre?.trim().isNotEmpty == true
               ? alerta.nombre!
-              : alerta.tipo,
+              : alerta.tipo.isEmpty ? alerta.tipo : '${alerta.tipo[0].toUpperCase()}${alerta.tipo.substring(1)}',
           style: const TextStyle(
             color: AppColors.textoMasClaro,
             fontSize: 16,
@@ -124,7 +124,7 @@ class AlertaExpandida extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                alerta.tipo,
+                alerta.tipo.isEmpty ? alerta.tipo : '${alerta.tipo[0].toUpperCase()}${alerta.tipo.substring(1)}',
                 style: const TextStyle(
                   color: AppColors.textoClaro,
                   fontSize: 13,
