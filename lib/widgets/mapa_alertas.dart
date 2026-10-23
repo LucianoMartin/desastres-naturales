@@ -184,41 +184,74 @@ class _MapaAlertasState extends State<MapaAlertas>
     final List<CircleMarker> circles = [];
 
     for (final alerta in widget.alertas) {
-      final String tipo = alerta.tipo.toLowerCase();
+      final String tipo = alerta.tipo.trim().toLowerCase();
+      final double radioSeguro =
+          (alerta.radio.isNaN || alerta.radio <= 0) ? 1000.0 : alerta.radio;
 
-      if (tipo == 'misil') {
-        circles.add(
-          CircleMarker(
-            point: alerta.ubicacion,
-            radius: alerta.radio * animValue,
-            useRadiusInMeter: true,
-            color: Colors.red.withValues(alpha: 0.5 * opacity),
-            borderColor: Colors.red.withValues(alpha: opacity),
-            borderStrokeWidth: 2.5,
-          ),
-        );
-      } else if (tipo == 'terremoto') {
-        circles.add(
-          CircleMarker(
-            point: alerta.ubicacion,
-            radius: alerta.radio * animValue,
-            useRadiusInMeter: true,
-            color: Colors.orange.withValues(alpha: 0.5 * opacity),
-            borderColor: Colors.deepOrange.withValues(alpha: opacity),
-            borderStrokeWidth: 2.5,
-          ),
-        );
+      switch (tipo) {
+        case 'misil':
+          circles.add(
+            CircleMarker(
+              point: alerta.ubicacion,
+              radius: radioSeguro * animValue,
+              useRadiusInMeter: true,
+              color: Colors.red.withValues(alpha: 0.5 * opacity),
+              borderColor: Colors.red.withValues(alpha: opacity),
+              borderStrokeWidth: 2.5,
+            ),
+          );
+          break;
 
-        circles.add(
-          CircleMarker(
-            point: alerta.ubicacion,
-            radius: 7,
-            useRadiusInMeter: false,
-            color: Colors.deepOrange,
-            borderColor: Colors.white,
-            borderStrokeWidth: 2,
-          ),
-        );
+        case 'terremoto':
+          circles.add(
+            CircleMarker(
+              point: alerta.ubicacion,
+              radius: radioSeguro * animValue,
+              useRadiusInMeter: true,
+              color: Colors.orange.withValues(alpha: 0.5 * opacity),
+              borderColor: Colors.deepOrange.withValues(alpha: opacity),
+              borderStrokeWidth: 2.5,
+            ),
+          );
+
+          circles.add(
+            CircleMarker(
+              point: alerta.ubicacion,
+              radius: 7,
+              useRadiusInMeter: false,
+              color: Colors.deepOrange,
+              borderColor: Colors.white,
+              borderStrokeWidth: 2,
+            ),
+          );
+          break;
+
+        case 'inundación':
+        case 'inundacion':
+          circles.add(
+            CircleMarker(
+              point: alerta.ubicacion,
+              radius: radioSeguro * animValue,
+              useRadiusInMeter: true,
+              color: Colors.blue.withValues(alpha: 0.3 * opacity),
+              borderColor: Colors.blue.withValues(alpha: opacity),
+              borderStrokeWidth: 2.5,
+            ),
+          );
+          break;
+
+        default:
+          circles.add(
+            CircleMarker(
+              point: alerta.ubicacion,
+              radius: radioSeguro * animValue,
+              useRadiusInMeter: true,
+              color: Colors.grey.withValues(alpha: 0.4 * opacity),
+              borderColor: Colors.grey.withValues(alpha: opacity),
+              borderStrokeWidth: 2.5,
+            ),
+          );
+          break;
       }
     }
 
