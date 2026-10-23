@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:desastres_naturales/widgets/elemento_dato.dart';
 import 'package:desastres_naturales/widgets/mini_mapa_alerta.dart';
+import 'package:desastres_naturales/services/geocodificacion_service.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -147,20 +148,29 @@ class AlertaExpandida extends StatelessWidget {
           const Divider(color: AppColors.fondoClaro, height: 1),
 
           if (alerta.descripcion?.trim().isNotEmpty == true) ...[
-            _DetalleAlerta(
+            ElementoDato(
               icono: Icons.description_outlined,
               titulo: 'Descripción',
               contenido: alerta.descripcion!.trim(),
             ),
-            const SizedBox(height: 18),
           ],
 
-          ElementoDato(
-            icono: Icons.location_on,
-            titulo: 'Ubicación',
-            contenido:
-                '· Latitud: ${alerta.latitud}       · Longitud: ${alerta.longitud}',
-            mostrarDivisor: false,
+          FutureBuilder<String>(
+            future: GeocodificacionService.obtenerCiudad(
+              alerta.latitud,
+              alerta.longitud,
+            ),
+            builder: (context, snapshot) {
+              final ciudad = snapshot.data ?? 'Buscando ciudad...';
+
+              return ElementoDato(
+                icono: Icons.location_on,
+                titulo: 'Ubicación',
+                contenido:
+                    '· Latitud: ${alerta.latitud} · Longitud: ${alerta.longitud}  · Ciudad: $ciudad',
+                mostrarDivisor: false,
+              );
+            },
           ),
 
           MiniMapaAlerta(
@@ -237,53 +247,6 @@ class _EtiquetaEstado extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-    );
-  }
-}
-
-class _DetalleAlerta extends StatelessWidget {
-  final IconData icono;
-  final String titulo;
-  final String contenido;
-
-  const _DetalleAlerta({
-    required this.icono,
-    required this.titulo,
-    required this.contenido,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icono, color: AppColors.textoRojo, size: 21),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                titulo,
-                style: const TextStyle(
-                  color: AppColors.textoMasClaro,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 5),
-              SelectableText(
-                contenido,
-                style: const TextStyle(
-                  color: AppColors.textoClaro,
-                  fontSize: 13,
-                  height: 1.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
