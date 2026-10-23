@@ -1,27 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:marquee/marquee.dart';
 
 import '../models/alerta.dart';
 import '../theme/app_colors.dart';
 
+const DISTANCIA_MAXIMA = 10000;
+
 class BannerAlertas extends StatelessWidget {
   final List<Alerta> alertas;
-
-  const BannerAlertas({super.key, required this.alertas});
+  final LatLng? miUbicacion;
+  
+  const BannerAlertas({
+    super.key,
+    required this.alertas,
+    required this.miUbicacion,
+  });
 
   @override
   Widget build(BuildContext context) {
     String marqueeText = 'Sin alertas activas';
+    final Distance distance = Distance();
 
     final List<String> textos = alertas
         .map((alerta) {
           final tipo = alerta.tipo.trim();
 
+          if (miUbicacion != null &&
+              distance(miUbicacion!, alerta.ubicacion) > DISTANCIA_MAXIMA) {
+            return '';
+          }
+
           if (tipo.isEmpty) {
             return '';
           }
 
-          return '⚠️ Alerta $tipo';
+          return '⚠️ $tipo';
         })
         .where((texto) => texto.isNotEmpty)
         .toList();

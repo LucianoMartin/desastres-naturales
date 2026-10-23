@@ -166,10 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedFontSize: 12,
         iconSize: 26,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Mapa',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Alertas',
@@ -178,10 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.access_time),
             label: 'Historial',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
     );
@@ -232,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   otrosUsuarios: otrosUsuarios,
                 ),
 
-                BannerAlertas(alertas: alertas),
+                BannerAlertas(alertas: alertas, miUbicacion: _miUbicacion),
 
                 ControlesMapa(
                   onCentrarUbicacion: _centrarMapa,
@@ -248,15 +242,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAlertsTab() {
-    return AlertasScreen(
-      onAbrirMapa: _abrirMapaEn,
-    );
+    return AlertasScreen(onAbrirMapa: _abrirMapaEn);
   }
 
   Widget _buildHistoryTab() {
-    return HistorialScreen(
-      onAbrirMapa: _abrirMapaEn,
-    );
+    return HistorialScreen(onAbrirMapa: _abrirMapaEn);
   }
 
   Widget _buildProfileTab() {
