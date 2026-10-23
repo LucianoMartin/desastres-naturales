@@ -183,25 +183,22 @@ class _HistorialScreenState extends State<HistorialScreen> {
     final opciones = ['Todas', ...tipos];
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (int i = 0; i < opciones.length; i++) ...[
-              if (i > 0) const SizedBox(width: 8),
-              BotonFiltro(
-                tipo: opciones[i],
-                seleccionado: _tipoSeleccionado == opciones[i],
-                onSelected: (_) {
-                  setState(() {
-                    _tipoSeleccionado = opciones[i];
-                  });
-                },
-              ),
-            ],
-          ],
-        ),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final tipo in opciones)
+            BotonFiltro(
+              tipo: tipo,
+              seleccionado: _tipoSeleccionado == tipo,
+              onSelected: (_) {
+                setState(() {
+                  _tipoSeleccionado = tipo;
+                });
+              },
+            ),
+        ],
       ),
     );
   }
