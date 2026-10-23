@@ -222,7 +222,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 BannerAlertas(alertas: alertas),
 
-                ControlesMapa(onCentrarUbicacion: _centrarMapa),
+                ControlesMapa(
+                  onCentrarUbicacion: _centrarMapa,
+                  mapController: _mapController,
+                  usuarios: otrosUsuarios,
+                ),
               ],
             );
           },
@@ -243,4 +247,3 @@ class _HomeScreenState extends State<HomeScreen> {
     return PerfilScreen(perfil: widget.perfil);
   }
 }
-
