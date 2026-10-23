@@ -33,5 +33,14 @@ dev_dependencies:
 
   flutter_lints: ^6.0.0
 
+  # Para hacer iconos automaticamente
+  flutter_launcher_icons: ^0.13.1
+
 flutter:
   uses-material-design: true
+
+# Configuración de los iconos de la aplicación
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/AlertApp-Icon-Transparent.png"
