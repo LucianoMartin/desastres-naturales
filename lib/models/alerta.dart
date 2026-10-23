@@ -67,12 +67,17 @@ class Alerta {
       }
     }
 
+    final double? radioParseado = (data['radio'] as num?)?.toDouble() ??
+        double.tryParse(data['radio']?.toString() ?? '');
+    final double radioSeguro =
+        (radioParseado == null || radioParseado <= 0) ? 1000.0 : radioParseado;
+
     return Alerta(
       id: id,
       tipo: (data['tipo'] ?? '').toString(),
       latitud: (data['latitud'] as num?)?.toDouble() ?? 0.0,
       longitud: (data['longitud'] as num?)?.toDouble() ?? 0.0,
-      radio: (data['radio'] as num?)?.toDouble() ?? 500.0,
+      radio: radioSeguro,
       fechaInicio: convertirFecha(data['fechaInicio']),
       fechaFin: convertirFechaOpcional(data['fechaFin']),
       nombre: data['nombre']?.toString(),
