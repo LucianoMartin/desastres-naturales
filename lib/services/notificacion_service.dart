@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as dev;
 
+import 'package:desastres_naturales/services/notificaciones/system_notification_stub.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart'
@@ -87,13 +88,29 @@ class NotificacionService {
       );
     }
 
-    FirebaseMessaging.onMessage.listen((m) {
+    FirebaseMessaging.onMessage.listen((m) async {
       _mensajes.add(m);
 
       final n = m.notification;
+
+      if (kIsWeb) {
+        final titulo =
+            n?.title ?? m.data['title']?.toString() ?? 'Alerta de emergencia';
+
+        final cuerpo =
+            n?.body ??
+            m.data['body']?.toString() ??
+            'Se registró una nueva alerta en tu zona.';
+
+        if (await permisoWebConcedido()) {
+          await mostrarNotificacionSistema(titulo, cuerpo);
+        }
+        return;
+      }
+
       if (n == null || !_esAndroid) return;
-      // Android no muestra notificaciones FCM con la app en primer plano
-      _local.show(
+
+      await _local.show(
         id: m.hashCode,
         title: n.title,
         body: n.body,

@@ -32,6 +32,40 @@
   <title>desastres_naturales</title>
   <link rel="manifest" href="manifest.json">
 </head>
+
+<script>
+  window.mostrarNotificacionSistema = async function (titulo, cuerpo) {
+    try {
+      if (!("Notification" in window)) {
+        throw new Error("Este navegador no soporta notificaciones");
+      }
+
+      if (Notification.permission !== "granted") {
+        throw new Error("El permiso de notificaciones no está concedido");
+      }
+
+      if (!("serviceWorker" in navigator)) {
+        throw new Error("El navegador no soporta Service Workers");
+      }
+
+      const registro = await navigator.serviceWorker.ready;
+
+      await registro.showNotification(titulo, {
+        body: cuerpo,
+        icon: "/icons/Icon-192.png",
+        tag: "desastres-" + Date.now(),
+        data: { url: "/" }
+      });
+
+      console.log("Notificación de Windows solicitada correctamente");
+      return true;
+    } catch (e) {
+      console.error("Error al mostrar la notificación:", e);
+      throw e;
+    }
+  };
+</script>
+
 <body>
   <!--
     You can customize the "flutter_bootstrap.js" script.
@@ -43,4 +77,28 @@
   -->
   <script src="flutter_bootstrap.js" async></script>
 </body>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('firebase-messaging-sw.js', {
+          scope: '/firebase-cloud-messaging-push-scope',
+        })
+        .then((registration) => {
+          console.log(
+            '[FCM] Service worker registrado:',
+            registration.scope
+          );
+        })
+        .catch((error) => {
+          console.error(
+            '[FCM] Error registrando service worker:',
+            error
+          );
+        });
+    });
+  }
+</script>
+
 </html>

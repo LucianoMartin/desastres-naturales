@@ -239,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Solo aparece en web y mientras no haya permiso de notificaciones
                 Positioned(
                   left: 16,
-                  bottom: 16,
+                  bottom: 80,
                   child: BotonActivarAlertas(servicio: notificaciones),
                 ),
               ],
